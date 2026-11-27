@@ -1,7 +1,9 @@
 package com.banking.transaction.repository;
 
 import com.banking.transaction.models.Transaction;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
@@ -13,6 +15,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     boolean existsByTransactionId(String transactionId);
 
     Optional<Transaction> findByTransactionId(String transactionId);
+
+    // Pessimistic lock on the transaction row — prevents double-reversal races
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT t FROM Transaction t WHERE t.transactionId = :transactionId")
+    Optional<Transaction> findByTransactionIdWithLock(@Param("transactionId") String transactionId);
 
     List<Transaction> findBySourceAccountOrDestinationAccountOrderByCreatedAtDesc(
             String sourceAccount, String destinationAccount);
