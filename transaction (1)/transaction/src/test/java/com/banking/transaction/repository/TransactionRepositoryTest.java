@@ -54,7 +54,7 @@ class TransactionRepositoryTest {
                         Transaction.TransactionType.WITHDRAWAL,
                         Transaction.TransactionStatus.SUCCESS,
                         new BigDecimal("500"),
-                        "ACC1001",
+                        "ACC-TEST-HIST",
                         null,
                         null
                 )
@@ -67,15 +67,15 @@ class TransactionRepositoryTest {
                         Transaction.TransactionStatus.SUCCESS,
                         new BigDecimal("200"),
                         null,
-                        "ACC1001",
+                        "ACC-TEST-HIST",
                         null
                 )
         );
 
         List<Transaction> history = transactionRepository
                 .findBySourceAccountOrDestinationAccountOrderByCreatedAtDesc(
-                        "ACC1001",
-                        "ACC1001"
+                        "ACC-TEST-HIST",
+                        "ACC-TEST-HIST"
                 );
 
         assertEquals(2, history.size());

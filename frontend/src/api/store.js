@@ -35,7 +35,17 @@ function seed() {
 
 const save = (d) => { localStorage.setItem(KEY, JSON.stringify(d)); return d }
 function load() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || save(seed()) } catch { return save(seed()) }
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY))
+    if (!d) return save(seed())
+    // demo mode: make sure the demo admin always exists, even if older saved data is present
+    const demo = seed().users[0]
+    const a = d.users.find((u) => u.role === 'admin')
+    if (!a) d.users.unshift(demo)
+    else if (a.email !== demo.email || a.password !== demo.password) Object.assign(a, { email: demo.email, password: demo.password })
+    save(d)
+    return d
+  } catch { return save(seed()) }
 }
 
 let db = load()
