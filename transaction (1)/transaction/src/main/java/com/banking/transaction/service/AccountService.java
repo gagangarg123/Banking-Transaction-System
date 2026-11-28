@@ -3,6 +3,7 @@ package com.banking.transaction.service;
 
 import com.banking.transaction.dto.AccountRequest;
 import com.banking.transaction.dto.AccountResponse;
+import com.banking.transaction.exception.AccountNotFoundException;
 import com.banking.transaction.exception.ApiException;
 import com.banking.transaction.exception.CustomerNotFoundException;
 import com.banking.transaction.models.Account;
@@ -23,7 +24,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
-
+    
     public AccountService(AccountRepository accountRepository,
                           CustomerRepository customerRepository) {
         this.accountRepository = accountRepository;
@@ -195,4 +196,19 @@ public class AccountService {
                 account.getCreatedAt()
         );
     }
+    @Transactional
+public AccountResponse freezeAccount(String accountNumber) {
+    Account account = accountRepository.findByAccountNumber(accountNumber)
+            .orElseThrow(() -> new AccountNotFoundException(accountNumber));
+    account.setStatus(Account.AccountStatus.FROZEN);
+    return toResponse(accountRepository.save(account));
+}
+
+@Transactional
+public AccountResponse unfreezeAccount(String accountNumber) {
+    Account account = accountRepository.findByAccountNumber(accountNumber)
+            .orElseThrow(() -> new AccountNotFoundException(accountNumber));
+    account.setStatus(Account.AccountStatus.ACTIVE);
+    return toResponse(accountRepository.save(account));
+}
 }

@@ -33,6 +33,15 @@ public class AccountController {
 
         return accountService.createAccount(request);
     }
+    @PostMapping("/{accountNumber}/freeze")
+     public AccountResponse freezeAccount(@PathVariable String accountNumber) {
+             return accountService.freezeAccount(accountNumber);
+}
+
+    @PostMapping("/{accountNumber}/unfreeze")
+    public AccountResponse unfreezeAccount(@PathVariable String accountNumber) {
+             return accountService.unfreezeAccount(accountNumber);
+}
 
     
     // GET /api/accounts
@@ -62,4 +71,6 @@ public class AccountController {
 
         return accountService.getAccountsByCustomer(customerId);
     }
+
+
 }
