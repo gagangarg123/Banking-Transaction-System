@@ -40,44 +40,105 @@ export default function Login() {
   }
 
   return (
-    <div className="login">
-      <div className="brand"><i>B</i><div>Banking System</div></div>
-      <div className="login-card">
-        <div className="tabs" role="tablist" aria-label="Login type">
-          {Object.entries(ROLES).map(([key, v]) => (
-            <button key={key} type="button" role="tab" aria-selected={role === key} onClick={() => pick(key)}>
-              <svg viewBox="0 0 24 24" className="ico"><path d={v.icon} /></svg>
-              {key === 'customer' ? 'Customer' : 'Admin'}
-            </button>
-          ))}
-        </div>
-        <form onSubmit={submit}>
-          <h1>{r.title}</h1>
-          <p className="k">{r.sub}</p>
-          {err && <div className="alert" role="alert">{err}</div>}
-          <div className="f">
-            <label htmlFor="e">Email</label>
-            <input id="e" type="email" autoComplete="username" required value={f.email} onChange={set('email')} />
-          </div>
-          <div className="f">
-            <label htmlFor="p">Password</label>
-            <div className="pw">
-              <input id="p" type={show ? 'text' : 'password'} autoComplete="current-password" required value={f.password} onChange={set('password')} />
-              <button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? 'Hide' : 'Show'}</button>
-            </div>
-          </div>
-          <button className="btn p wide" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+    // <div className="login">
+    //   <div className="brand"><i>B</i><div>Banking System</div></div>
+    //   <div className="login-card">
+    //     <div className="tabs" role="tablist" aria-label="Login type">
+    //       {Object.entries(ROLES).map(([key, v]) => (
+    //         <button key={key} type="button" role="tab" aria-selected={role === key} onClick={() => pick(key)}>
+    //           <svg viewBox="0 0 24 24" className="ico"><path d={v.icon} /></svg>
+    //           {key === 'customer' ? 'Customer' : 'Admin'}
+    //         </button>
+    //       ))}
+    //     </div>
+    //     <form onSubmit={submit}>
+    //       <h1>{r.title}</h1>
+    //       <p className="k">{r.sub}</p>
+    //       {err && <div className="alert" role="alert">{err}</div>}
+    //       <div className="f">
+    //         <label htmlFor="e">Email</label>
+    //         <input id="e" type="email" autoComplete="username" required value={f.email} onChange={set('email')} />
+    //       </div>
+    //       <div className="f">
+    //         <label htmlFor="p">Password</label>
+    //         <div className="pw">
+    //           <input id="p" type={show ? 'text' : 'password'} autoComplete="current-password" required value={f.password} onChange={set('password')} />
+    //           <button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? 'Hide' : 'Show'}</button>
+    //         </div>
+    //       </div>
+    //       <button className="btn p wide" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
 
-          {/* Demo credentials: remove this block when real credentials are issued */}
-          <div className="demo">
-            <div className="demo-h"><b>Demo credentials</b><button type="button" onClick={() => { setF(r.demo); setErr('') }}>Fill in</button></div>
-            <div className="r"><span>Email</span><span className="v">{r.demo.email}</span></div>
-            <div className="r"><span>Password</span><span className="v">{r.demo.password}</span></div>
+    //       {/* Demo credentials: remove this block when real credentials are issued */}
+    //       <div className="demo">
+    //         <div className="demo-h"><b>Demo credentials</b><button type="button" onClick={() => { setF(r.demo); setErr('') }}>Fill in</button></div>
+    //         <div className="r"><span>Email</span><span className="v">{r.demo.email}</span></div>
+    //         <div className="r"><span>Password</span><span className="v">{r.demo.password}</span></div>
+    //       </div>
+    //       <p className="help">{r.help}</p>
+    //     </form>
+    //   </div>
+    //   <div className="login-foot">© 2026 Banking System. Transactions are encrypted and monitored.</div>
+    // </div>
+
+
+
+
+      
+    <div className="login">
+      <section className="login-hero">
+        <div className="brand"><i>B</i><div>Banking System</div></div>
+        <div className="hero-text">
+          <h2>Move money safely, every time.</h2>
+          <p>Every transfer is processed one account at a time, so balances stay correct even when many people pay at once.</p>
+          <ul>
+            <li>Instant transfers between accounts</li>
+            <li>Real-time failure monitoring</li>
+            <li>A full record of every transaction</li>
+          </ul>
+        </div>
+        <small>© 2026 Banking System</small>
+      </section>
+
+      <section className="login-main">
+        <div className="login-card">
+          <div className="tabs" role="tablist" aria-label="Login type">
+            {Object.entries(ROLES).map(([key, v]) => (
+              <button key={key} type="button" role="tab" aria-selected={role === key} onClick={() => pick(key)}>
+                <svg viewBox="0 0 24 24" className="ico"><path d={v.icon} /></svg>
+                {key === 'customer' ? 'Customer' : 'Admin'}
+              </button>
+            ))}
           </div>
-          <p className="help">{r.help}</p>
-        </form>
-      </div>
-      <div className="login-foot">© 2026 Banking System. Transactions are encrypted and monitored.</div>
+          <form onSubmit={submit}>
+            <h1>{r.title}</h1>
+            <p className="k">{r.sub}</p>
+            {err && <div className="alert" role="alert">{err}</div>}
+            <div className="f">
+              <label htmlFor="e">Email</label>
+              <input id="e" type="email" autoComplete="username" required value={f.email} onChange={set('email')} />
+            </div>
+            <div className="f">
+              <label htmlFor="p">Password</label>
+              <div className="pw">
+                <input id="p" type={show ? 'text' : 'password'} autoComplete="current-password" required value={f.password} onChange={set('password')} />
+                <button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? 'Hide' : 'Show'}</button>
+              </div>
+            </div>
+            <button className="btn p wide" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+
+            {/* Demo credentials: remove this block when real credentials are issued */}
+            <div className="demo">
+              <div className="demo-h"><b>Demo credentials</b><button type="button" onClick={() => { setF(r.demo); setErr('') }}>Fill in</button></div>
+              <div className="r"><span>Email</span><span className="v">{r.demo.email}</span></div>
+              <div className="r"><span>Password</span><span className="v">{r.demo.password}</span></div>
+            </div>
+            <p className="help">{r.help}</p>
+          </form>
+        </div>
+      </section>
     </div>
+      
   )
 }
+  // )
+// }

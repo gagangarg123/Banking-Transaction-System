@@ -8,6 +8,7 @@ import com.banking.transaction.exception.EmailExistsException;
 import com.banking.transaction.models.Customer;
 import com.banking.transaction.repository.CustomerRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,12 @@ import java.util.Locale;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository,
+                           PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -35,6 +39,7 @@ public class CustomerService {
         customer.setName(request.getName().trim());
         customer.setEmail(normalizedEmail);
         customer.setPhone(request.getPhone().trim());
+        customer.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return convertToResponse(customerRepository.save(customer));
     }

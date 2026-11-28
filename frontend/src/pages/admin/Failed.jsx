@@ -1,38 +1,38 @@
-import { useState } from 'react'
-import { retryTx, useDb } from '../../api/store.js'
+import { useEffect, useState } from 'react'
+import { getAllTransactions } from '../../api/client.js'
 import { Kpi, Page, Tag, ftime, inr } from '../../components/ui.jsx'
 
 export default function Failed() {
-  const db = useDb()
-  const [busy, setBusy] = useState('')
-  const [msg, setMsg] = useState('')
-  const failed = db.txs.filter((t) => t.status === 'Failed')
-  const count = (s) => failed.filter((t) => t.reason.toLowerCase().includes(s)).length
+  const [failed, setFailed] = useState([])
 
-  const retry = async (id) => {
-    setBusy(id); setMsg('')
-    try { await retryTx(id); setMsg(`${id} completed on retry.`) }
-    catch (e) { setMsg(`${id} failed again: ${e.message}`) }
-    setBusy('')
-  }
+  useEffect(() => {
+    getAllTransactions()
+      .then((txs) => setFailed((txs || []).filter((t) => t.status === 'FAILED' || t.status === 'REJECTED')))
+      .catch(() => {})
+  }, [])
+
+  const count = (s) => failed.filter((t) => (t.message || '').toLowerCase().includes(s)).length
 
   return (
-    <Page title="Failed transactions" sub="Transactions that did not complete, with the cause and worker thread.">
+    <Page title="Failed transactions" sub="Transactions that did not complete, with the cause.">
       <div className="grid g4">
         <Kpi k="Failed" v={failed.length} s="Total" />
-        <Kpi k="Deadlocks" v={count('deadlock')} s="Safe to retry" />
-        <Kpi k="Lock timeouts" v={count('lock')} s="Safe to retry" />
         <Kpi k="Insufficient balance" v={count('insufficient')} s="Needs customer action" />
+        <Kpi k="Account issues" v={count('not found') + count('frozen') + count('inactive')} s="Account state" />
+        <Kpi k="Rejected" v={failed.filter((t) => t.status === 'REJECTED').length} s="Invalid requests" />
       </div>
-      {msg && <div className="alert info" role="status">{msg}</div>}
       <div className="card">
         {failed.length === 0 ? <p className="k">No failed transactions.</p> : (
           <div className="scroll"><table>
-            <thead><tr><th>Reference</th><th>From</th><th>To</th><th>Reason</th><th>Thread</th><th>Time</th><th className="r">Amount</th><th>Status</th><th /></tr></thead>
+            <thead><tr><th>Reference</th><th>Type</th><th>Accounts</th><th>Reason</th><th>Time</th><th className="r">Amount</th><th>Status</th></tr></thead>
             <tbody>{failed.map((t) => (
-              <tr key={t.id}><td>{t.id}</td><td>{t.fromName}</td><td>{t.toName}</td><td>{t.reason}</td><td>{t.thread}</td><td>{ftime(t.date)}</td><td className="r">{inr(t.amount)}</td>
-                <td><Tag s={busy === t.id ? 'Retrying' : 'Failed'} /></td>
-                <td className="r"><button className="btn s" disabled={!!busy} onClick={() => retry(t.id)}>Retry</button></td></tr>
+              <tr key={t.transactionId}>
+                <td>{t.transactionId}</td><td>{t.type}</td>
+                <td>{t.sourceAccount || '—'} → {t.destinationAccount || '—'}</td>
+                <td>{t.message || '—'}</td><td>{ftime(t.timestamp)}</td>
+                <td className="r">{inr(t.amount)}</td>
+                <td><Tag s={t.status === 'REJECTED' ? 'Rejected' : 'Failed'} /></td>
+              </tr>
             ))}</tbody>
           </table></div>
         )}

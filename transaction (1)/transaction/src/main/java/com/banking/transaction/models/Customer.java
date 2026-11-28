@@ -25,6 +25,9 @@ public class Customer {
     @Column(nullable = false, length = 20)
     private String phone;
 
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;  
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -78,6 +81,14 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDateTime getCreatedAt() {

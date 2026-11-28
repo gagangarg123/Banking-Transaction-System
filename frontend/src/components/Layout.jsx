@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from './ui.jsx'
+import Logo from './Logo.jsx'
+
 
 const NAV = {
   customer: [['dashboard', 'Dashboard', 'dash'], ['account', 'Account', 'acc'], ['transactions', 'Transactions', 'tx'], ['transfer', 'Transfer', 'tr'], ['profile', 'Profile', 'pr']],
@@ -14,7 +16,8 @@ export default function Layout({ role }) {
   return (
     <div className="shell">
       <aside>
-        <div className="brand"><i>B</i><div>Banking System<small>{role === 'admin' ? 'Admin console' : 'Online banking'}</small></div></div>
+        {/* <div className="brand"><i>B</i><div>Banking System<small>{role === 'admin' ? 'Admin console' : 'Online banking'}</small></div></div> */}
+         <div className="brand"><Logo sub={role === 'admin' ? 'Admin console' : 'Online banking'} /></div>
         <nav aria-label="Main">
           {NAV[role].map(([p, label, ic]) => (
             <NavLink key={p} to={`/${role}/${p}`}><Icon n={ic} />{label}</NavLink>

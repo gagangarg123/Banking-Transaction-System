@@ -19,6 +19,10 @@ public class CustomerRequest {
     @Size(max = 20, message = "Phone cannot exceed 20 characters")
     private String phone;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    private String password;
+
     // Default constructor
     public CustomerRequest() {
     }
@@ -48,5 +52,13 @@ public class CustomerRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
